@@ -7,12 +7,25 @@ from django.contrib.auth import logout, login, authenticate
 from .models import *
 from .forms import *
 
-class IndexView(TemplateView):
-    template_name = 'coins/index.html'
-    extra_context = {
+# class IndexView(TemplateView):
+#     template_name = 'coins/index.html'
+#     extra_context = {
+#         "coin_list": Coin.objects.filter(status='a'),
+#         "continent_list": Continent.objects.order_by("name"),
+#     }
+
+
+def index_view(request):
+    context = {
         "coin_list": Coin.objects.filter(status='a'),
         "continent_list": Continent.objects.order_by("name"),
     }
+    return render(
+        request,
+        template_name='coins/index.html',
+        context=context
+    )
+
     
 class CoinDetailView(DetailView):
     model = Coin
