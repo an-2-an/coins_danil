@@ -1,0 +1,35 @@
+{% extends 'coins/base.html' %} 
+{% block title %} 
+{{ owner }}'s mailbox
+{% endblock %} 
+{% block content %}
+<h3>{{ owner }}'s mailbox</h3>
+    <h4> Income messages </h4>
+    {% for message in owner.received_messages.all %}
+    <div>
+        <a href="{% url 'coins:message-detail' pk=message.id %}
+        " class="
+        {% if not message.is_read %}
+            fw-bold
+        {% endif %} 
+        ">
+        {{ message }} ( {{ message.created|timesince }} )
+        </a>            
+    </div>        
+    {% endfor %}
+    <h4 class="mt-2"> Sended messages </h4>
+    {% for message in owner.created_messages.all %}
+    <div>
+        <a href="{% url 'coins:message-detail' pk=message.id %}
+        " class="
+        {% if not message.is_read %}
+            fw-bold
+        {% endif %} 
+        ">      
+        {{ message }} ( {{ message.created|timesince }} )
+        </a>
+                    
+    </div>        
+    {% endfor %}
+
+{% endblock %}

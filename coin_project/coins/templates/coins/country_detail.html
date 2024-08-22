@@ -1,0 +1,28 @@
+{% extends 'coins/base.html' %}
+
+{% block title %}
+    {{ country.name }} - Coins
+{% endblock %}
+{% block content %}
+<h1>Coins of {{ country.name }}</h1>
+
+<div class="row">
+    {% for coin in country.coins.all %}
+    <div class="col-3 text-center border ">
+        <a href="{% url 'coins:coin-detail' pk=coin.id %}">
+            <img src="{{ coin.img_front.url }}" alt="coin" class="w-75 h-75 object-fit-contain border rounded">
+        </a>
+        <p>
+            {{ coin.country }} 
+            <br>
+            {{ coin.denomination }} {{ coin.year }}
+            <br>
+            <a href="{% url 'coins:user-cabinet' pk=coin.owner.id %}">
+                {{ coin.owner}}
+            </a>
+        </p>
+    </div>        
+    {% endfor %}
+</div>
+
+{% endblock %}

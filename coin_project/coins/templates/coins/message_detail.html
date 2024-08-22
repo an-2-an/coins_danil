@@ -1,0 +1,17 @@
+{% extends 'coins/base.html' %} 
+{% block title %} 
+message #{{ message.id }}
+{% endblock %} 
+{% block content %}
+<h3>message #{{ message.id }}</h3>
+    <h4>From {{message.author }}</h4>
+    <p>
+        created: {{message.created}}
+    </p>
+    <div class="p-5 border">
+        <p>
+            {{message.text|escape}}
+        </p>
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <title>{% block title %}{% endblock %}</title>
+    <link
+      rel="shortcut icon"
+      href="{% static 'coins/img/coins.png' %}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-3">
+          <a href="{% url 'coins:index'%}">
+            <img
+              class="w-100"
+              src="{% static 'coins/img/coins.png' %}"
+              alt="logo"
+            />
+          </a>
+        </div>
+        <div class="col-2">
+          {% if user.is_authenticated %} {{ user }}
+          <img class="w-25" src="{{ user.profile.user_pic.url }}" alt="logo" />
+          <br />
+          <a href="{% url 'coins:sign-out' %}"> sign out </a>
+          {% if user.is_staff %}
+          <br />
+          <a href="/admin/" target="_blank"> admin panel </a>
+          {% endif %} 
+          
+          {% if user.profile.has_multi_offers_under_consideration %}
+          <br />
+          <a href="{% url 'coins:user-offers' %}">
+            You have offers to consider
+          </a>
+          {% endif %} 
+          <br>
+          <a href="{% url 'coins:user-cabinet' pk=user.id %}">Personal cabinet</a>
+          
+          <br>
+            <a href="{% url 'coins:user-mail-box' pk=user.id %}">
+              mailbox
+              {% if user.profile.unread_messages_count %}
+              : ({{ user.profile.unread_messages_count }})
+              {% endif %}
+            </a>
+          {% if user.is_superuser %}
+          <div>
+              <a href="{% url 'coins:coins-to-send' %}"> 
+                  coins for send 
+              </a>                
+          </div>   
+          {% endif %}
+          {% else %}
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#modal-login"
+          >
+            Sign in
+          </button>
+          <br />
+          <a href="{% url 'coins:create-account-page' %}"> Create account </a>
+          {% endif %}
+        </div>
+      </div>
+      {% block content %}{% endblock %}
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="modal-login"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <form action="{% url 'coins:sign-in' %}" method="post">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Modal title
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <input
+                class="form-control my-2"
+                type="text"
+                name="username"
+                placeholder="username"
+              />
+              <input
+                class="form-control my-2"
+                type="password"
+                name="password"
+                placeholder="password"
+              />
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Sign in</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

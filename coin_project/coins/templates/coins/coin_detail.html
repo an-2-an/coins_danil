@@ -1,0 +1,57 @@
+{% extends 'coins/base.html' %}
+
+{% block title %}
+    {{ coin }}
+{% endblock %}
+
+{% block content %}
+<div class="row" >
+    <div class="col-6 text-center">
+        <img class="w-75" src="{{ coin.img_front.url }}" alt="">
+        <div class="row">
+            <div class="col-4">
+                <img class="w-100" src="{{ coin.img_back.url }}" alt="">                
+            </div>
+            {% if coin.img_add_1 %}
+            <div class="col-4">
+                <img class="w-100" src="{{ coin.img_add_1.url }}" alt="">                
+            </div>
+            {% endif %} 
+            {% if coin.img_add_2 %}
+            <div class="col-4">
+                <img class="w-100" src="{{ coin.img_add_2.url }}" alt="">                
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-6">
+       <p class="fs-2">
+            {{ coin.country }} {{ coin.denomination }} {{ coin.year }} 
+            
+       </p>
+       <p class="fs-3">
+        Owner: <a href="{% url 'coins:user-cabinet' pk=coin.owner.id %}">{{ coin.owner }}</a>         
+       </p>
+       {% if user.is_authenticated and user != coin.owner %} 
+       <form action="{% url 'coins:offer-detail' %}" method="post">
+           {% csrf_token %}
+           <input class="btn btn-primary" type="submit" value="make offer">
+           <input type="hidden" name="coin_id" value="{{ coin.id }}">
+        </form>
+        {% endif %}    
+        <br>              
+        {% if user.is_authenticated and user != coin.owner  %}
+             <h5>Create message to {{ coin.owner }}</h5>
+             <form action="{% url 'coins:create-new-message' pk=coin.id %}" method="post">
+                 {% csrf_token %}
+                 {{ form.as_p }}
+                 <input type="hidden" name="author_id" value="{{ user.id }}">
+                 <input type="hidden" name="recipient_id" value="{{ coin.owner.id }}">
+                 <input type="submit" value="send message" class="btn btn-primary">
+             </form>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

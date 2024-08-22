@@ -1,0 +1,33 @@
+{% extends 'coins/base.html' %}
+
+{% block title %}
+    Coins to send
+{% endblock %}
+
+{% block content %}
+    <h1>Coins to send</h1>
+    {% for coin in object_list %}
+        <div class="row">
+            <div class="col-3">
+                <img src="{{ coin.img_front.url }}" class="w-75">
+                <p>
+                    {{ coin }}
+                    <br>
+                    {{ coin.owner }}
+                    <br>
+                    {{ coin.owner.get_full_name }}
+                    <br>
+                    {{ coin.owner.profile.postcode}}, {{ coin.owner.profile.addres}}, {{ coin.owner.profile.phone}}, {{ coin.owner.profile.city}}
+                </p>
+                
+            </div>
+            <div class="col-3">
+                <form action="{% url 'coins:coins-sended' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" value="{{ coin.id }}">
+                    <input type="submit" class="btn btn-primary" value="sended">
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

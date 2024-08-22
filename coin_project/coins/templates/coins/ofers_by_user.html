@@ -1,0 +1,58 @@
+{% extends 'coins/base.html' %}
+
+{% block title %}
+{{user}}'s offers
+{% endblock %}
+
+{% block content %}
+
+{% for offer in object_list %}
+
+    
+<h3> Offer #{{ offer.id }} from {{ offer.author }}</h3>
+<p> {{ offer.created }}</p> 
+<div class="row">
+    <div class="col-4">
+        <h4> Your coins that {{ offer.author }} is interested in exchanging</h4>
+        {% for coin in offer.coins_to_get.all %}
+        <div>
+            <img src="{{ coin.img_front.url }}" alt="" height="150">
+        <p>
+            {{ coin }}
+        </p>
+        </div>
+        
+        {% endfor %}
+    </div> 
+    <div class="col-1"></div>
+    <div class="col-4">
+        <h4> Сoins that are offered to you </h4>
+        {% for coin in offer.coins_to_give.all %}
+        <div>
+            <img src="{{ coin.img_front.url }}" alt="" height="150">
+        <p>
+            {{ coin }}
+        </p>
+        </div>                
+        {% endfor %}
+    </div>    
+    <div class="col-3">
+        <form action="{% url 'coins:accept-multi-offer' pk=offer.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="accept offer" class="btn btn-success">
+            
+        </form>
+
+        <div class="my-3"></div>
+
+        <form action="{% url 'coins:cancel-multi-offer' pk=offer.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="cancel offer" class="btn btn-danger">
+        </form>
+    </div>       
+</div>
+
+
+
+{% endfor %}
+{% endblock %}

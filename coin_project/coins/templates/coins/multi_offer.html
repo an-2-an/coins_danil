@@ -1,0 +1,40 @@
+{% extends 'coins/base.html' %}
+
+{% block title %}
+multioffer to {{recipient}}
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'coins:create-multi-offer' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="make offer" class="btn btn-primary">
+    
+    <div class="row">
+    <div class="col-6">
+        <h3>{{ recipient}}'s coins</h3>
+            {% for coin in recipient.profile.active_coins %}
+                <div>
+                    <input type="checkbox" name="coins_to_get_ids" value="{{ coin.id }}">
+                    <img src="{{ coin.img_front.url }}" height="150" alt="">
+                    {{ coin }}
+                </div>
+            {% endfor %}        
+    </div>
+    <div class="col-6">
+        <h3>{{ user }}'s coins</h3>
+        
+            {% for coin in user.profile.active_coins %}
+                <div>
+                    <input type="checkbox" name="coins_to_give_ids" value="{{ coin.id }}">
+                    <img src="{{ coin.img_front.url }}" height="150" alt="">
+                    {{ coin }}
+                </div>
+            {% endfor %}
+                
+        </div>
+    </div>
+    <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
+</form>
+
+
+{% endblock %}

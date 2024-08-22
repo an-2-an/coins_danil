@@ -1,0 +1,32 @@
+{% extends 'coins/base.html' %}
+
+{% block title %}
+    Make offer: {{ coin }}
+{% endblock %}
+
+{% block content %}
+    <h3>
+        Make offer {{ coin }}
+        <br> 
+        Owner {{ coin.owner }}
+    </h3>
+    <img src="{{ coin.img_front.url }}" width="200">
+    <form class='fs-3' action="{% url 'coins:make-offer'%}" method="post">
+        {% csrf_token %}
+        <h2> My coins for change </h2>
+        {% for el in user.coins.all %}
+            <div>
+                <input type="radio" name="coin_to_give_id" id="coin-{{el.id}}" value="{{el.id}}">
+                <label for="coin-{{el.id}}">                    
+                    <img src="{{ el.img_front.url }}" width="100">
+                    {{ el }}
+                </label>
+            </div>
+        {% endfor %}
+        <input type="hidden" name="coin_to_get_id" value="{{ coin.id }}">
+        <div>
+            <input class="btn btn-primary" type="submit" value="make offer">
+        </div>
+    </form>
+
+{% endblock %}
